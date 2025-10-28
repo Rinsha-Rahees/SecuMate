@@ -1,14 +1,16 @@
 import { useFonts } from "expo-font";
-import { SplashScreen } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import "./global.css";
 
+SplashScreen.preventAutoHideAsync();
+
 export const unstable_settings = {
   // Ensure any route can link back to `/`
-  initialRouteName: "sign-in",
+  initialRouteName: "auth",
 };
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     "Nunito-Bold": require("../assets/fonts/Nunito-Bold.ttf"),
     "Nunito-ExtraBold": require("../assets/fonts/Nunito-ExtraBold.ttf"),
     "Nunito-Light": require("../assets/fonts/Nunito-Light.ttf"),
@@ -18,14 +20,14 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
+    if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded && !fontError) {
     return null;
   }
 
-  return <></>;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
